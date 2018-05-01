@@ -9,7 +9,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build:lib": "ng-packagr -p ng-store/package.json"
+    "build:lib": "ng-packagr -p ./src/lib/package.json"
   },
   "private": true,
   "dependencies": {

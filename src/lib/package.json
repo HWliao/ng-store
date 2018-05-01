@@ -14,6 +14,6 @@
     "lib": {
       "entryFile": "src/public_api.ts"
     },
-    "dest": "../dist/ng-store"
+    "dest": "../../dist/ng-store"
   }
 }
