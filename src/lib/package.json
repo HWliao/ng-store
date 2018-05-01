@@ -7,7 +7,9 @@
   "private": true,
   "peerDependencies": {
     "@angular/core": "^5.2.0",
-    "@angular/common": "^5.2.0"
+    "@angular/common": "^5.2.0",
+    "redux": "^3.7.2",
+    "immer": "^1.2.1"
   },
   "ngPackage": {
     "$schema": "./node_modules/ng-packagr/ng-package.schema.json",

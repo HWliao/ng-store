@@ -1,1 +1,1 @@
-export const test = 'test1';
+export * from './ng-stroe.module';
