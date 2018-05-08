@@ -1,10 +1,15 @@
-import { NgModule } from '@angular/core';
-import { NgStoreComponent } from './ng-store.component';
+import {ModuleWithProviders, NgModule} from '@angular/core';
+import {defaultOptions, StoreOptionsToken} from './service/store-options.service';
+import {StoreOptions} from './model/store';
 
-@NgModule({
-  imports: [
-  ],
-  declarations: [NgStoreComponent],
-  exports: [NgStoreComponent]
-})
-export class NgStoreModule { }
+@NgModule({})
+export class NgStoreModule {
+  static forRoot(storeOptions: StoreOptions = defaultOptions): ModuleWithProviders {
+    return {
+      ngModule: NgStoreModule,
+      providers: [
+        {provide: StoreOptionsToken, useValue: storeOptions}
+      ]
+    };
+  }
+}

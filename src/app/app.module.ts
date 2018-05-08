@@ -2,17 +2,16 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
-import {NgStoreService} from 'ng-store';
-import {NgAopService} from 'ng-aop';
+import {NgStoreModule, NgStoreService} from 'ng-store';
 
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    NgStoreModule.forRoot()
   ],
-  providers: [NgStoreService, NgAopService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
