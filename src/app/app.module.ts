@@ -1,7 +1,9 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
 
-import { AppComponent } from './app.component';
+import {AppComponent} from './app.component';
+import {NgStoreService} from 'ng-store';
+import {NgAopService} from 'ng-aop';
 
 @NgModule({
   declarations: [
@@ -10,7 +12,8 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule
   ],
-  providers: [],
+  providers: [NgStoreService, NgAopService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

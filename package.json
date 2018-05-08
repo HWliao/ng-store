@@ -4,8 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --open",
-    "build": "ng build",
-    "build:prod": "ng build --prod",
+    "build": "npm run build:demo && npm run build:ng-store && npm run build:ng-aop",
+    "build:demo": "ng build --prod",
+    "build:ng-store": "ng build ng-store --prod",
+    "build:ng-aop": "ng build ng-aop --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

@@ -1,9 +1,14 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class NgStoreService {
 
-  constructor() { }
+  constructor() {
+  }
+
+  public getStr() {
+    return 'store1';
+  }
 }

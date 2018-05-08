@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {NgStoreService} from 'ng-store';
+import {NgAopService} from 'ng-aop';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  constructor(store: NgStoreService, aop: NgAopService) {
+    this.title = store.getStr() + aop.getStr();
+  }
+
   title = 'app';
 }

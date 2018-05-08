@@ -18,10 +18,10 @@
     ],
     "paths": {
       "ng-store": [
-        "dist/ng-store"
+        "projects/ng-store/src/public_api"
       ],
       "ng-aop": [
-        "dist/ng-aop"
+        "projects/ng-aop/src/public_api"
       ]
     }
   }
