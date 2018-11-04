@@ -1,4 +1,4 @@
-import { Middleware, Reducer, ReducersMapObject, StoreEnhancer } from 'redux';
+import { Middleware, Reducer, ReducersMapObject, Store, StoreEnhancer } from 'redux';
 import { InjectionToken } from '@angular/core';
 import { returnSelf } from './tools';
 
@@ -38,6 +38,10 @@ export interface StoreConfig {
    * 是否开启redux devtool
    */
   devtool?: boolean;
+  /**
+   * 外部提供store时,不会去创建redux store,其他参数将无效
+   */
+  store?: Store;
 
   [key: string]: any;
 }
@@ -51,7 +55,8 @@ export const defaultStoreConfig: StoreConfig = {
   initState: {},
   middlewares: [],
   extraEnhancers: [],
-  devtool: true
+  devtool: true,
+  store: null
 };
 
 /**

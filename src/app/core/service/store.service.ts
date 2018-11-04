@@ -15,7 +15,7 @@ export class StoreService {
     private readonly storeConfig: StoreConfig
   ) {
     this.storeConfig = Object.assign({}, defaultStoreConfig, this.storeConfig || {});
-    this._store = buildStore(this.storeConfig);
+    this._store = this.storeConfig.store || buildStore(this.storeConfig);
   }
 }
 
@@ -29,7 +29,7 @@ export class StoreService {
  * @param devtool 是否开启redux devtool
  */
 export function buildStore({ reducerEnhancer, extraReducers, initState, middlewares, extraEnhancers, devtool }: StoreConfig): Store {
-  const rootReducer = createReducer({ ...extraReducers }, reducerEnhancer);
+  const rootReducer = createReducer({ ...extraReducers, root: (state = false) => state }, reducerEnhancer);
   const enhancers: StoreEnhancer[] = [applyMiddleware(...middlewares), ...extraEnhancers, openDevtool(devtool)];
   const enhancer: StoreEnhancer = compose(...enhancers);
   return createStore(rootReducer, initState, enhancer);
