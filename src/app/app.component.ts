@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { WrapperModel } from './core/model/CountModel';
+import { CountModel } from './core/model/CountModel';
+import { CM } from './core/model/Model';
 
 @Component({
   selector: 'ns-root',
@@ -10,8 +11,10 @@ export class AppComponent {
   title = 'ng-store';
   count = 0;
 
-  constructor(model: WrapperModel) {
+  constructor(model: CountModel) {
     console.log(model);
+    console.log(CM(CountModel).increase);
+    console.log(CM(CountModel).count);
   }
 
   increase() {
