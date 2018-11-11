@@ -1,6 +1,6 @@
 import { Middleware, Reducer, ReducersMapObject, Store, StoreEnhancer } from 'redux';
 import { InjectionToken } from '@angular/core';
-import { returnSelf } from './tools';
+import { returnSelf } from '../tools/tools';
 
 
 /**

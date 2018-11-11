@@ -1,6 +1,8 @@
 import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StoreConfig } from './service/store.config';
+import { StoreConfig } from './core/config/store.config';
+import { buildStore } from './core/store';
+import { StoreService } from './service/store.service';
 
 @NgModule({
   declarations: [],
@@ -9,9 +11,13 @@ import { StoreConfig } from './service/store.config';
   ]
 })
 export class StoreModule {
-  static forRoot(config: StoreConfig): ModuleWithProviders {
+  static forRoot(config?: StoreConfig): ModuleWithProviders {
+    buildStore(config);
     return {
-      ngModule: StoreModule
+      ngModule: StoreModule,
+      providers: [
+        { provide: StoreService, useClass: StoreService }
+      ]
     };
   }
 }

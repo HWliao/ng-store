@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { StoreService } from './core/store/service/store.service';
 
 @Component({
   selector: 'ns-root',
@@ -10,7 +11,8 @@ export class AppComponent {
 
   count = 0;
 
-  constructor() {
+  constructor(private storeService: StoreService) {
+    this.storeService.connect(this);
   }
 
   increase() {

@@ -3,5 +3,10 @@
     "editor.formatOnType": true,
     "editor.formatOnSave": true,
     "files.autoSave": "onFocusChange",
-    "explorer.autoReveal": false
+    "explorer.autoReveal": false,
+    "javascript.preferences.quoteStyle": "single",
+    "typescript.preferences.quoteStyle": "single",
+    "files.insertFinalNewline": true,
+    "files.trimFinalNewlines": true,
+    "editor.tabSize": 2
 }
