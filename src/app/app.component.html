@@ -1,6 +1,7 @@
 <div style="display: flex;flex-direction: column;align-items: center;">
   <p>{{title}}</p>
-  <button>increase</button>
-  <button>chanage</button>
+  <p>{{count}}</p>
+  <button (click)="increase()">increase</button>
+  <button (click)="change()">change</button>
 </div>
 <router-outlet></router-outlet>
