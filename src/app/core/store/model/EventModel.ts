@@ -4,7 +4,7 @@ import { Model } from '../core/annotation/Model';
  * Event Model
  * 用于处理事件流
  */
-@Model({})
+@Model('@@event')
 export class EventModel {
 
   /**

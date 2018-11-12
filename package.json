@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --aot --open",
+    "start": "ng serve --open",
+    "start:aot": "ng serve --aot --open",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
@@ -23,6 +24,7 @@
     "core-js": "^2.5.4",
     "immer": "^1.7.4",
     "redux": "^4.0.1",
+    "reflect-metadata": "^0.1.12",
     "rxjs": "~6.3.3",
     "zone.js": "~0.8.26"
   },

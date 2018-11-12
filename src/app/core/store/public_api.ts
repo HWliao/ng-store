@@ -1,3 +1,3 @@
 export { StoreModule } from './store.module';
 
-export { Model } from './core/annotation/Model';
+export { ModelDecorator as Model, HackType as Type } from './core/annotation/Model';
