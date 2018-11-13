@@ -31,7 +31,7 @@ export function buildStore(config: StoreConfig = {}): Store {
   if (!store) {
     config = Object.assign({}, defaultStoreConfig, config);
     const { reducerEnhancer, extraReducers, initState, middlewares, extraEnhancers, devtool } = config;
-    const rootReducer = createReducer({ ...extraReducers, metadata: (state = {}) => state }, reducerEnhancer);
+    const rootReducer = createReducer({ ...extraReducers }, reducerEnhancer);
     const enhancers: StoreEnhancer[] = [applyMiddleware(...middlewares), ...extraEnhancers, openDevtool(devtool)];
     const enhancer: StoreEnhancer = compose(...enhancers);
     store = createStore(rootReducer, initState, enhancer);

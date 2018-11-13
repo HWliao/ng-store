@@ -7,7 +7,8 @@ import { ReducerEnhancer } from '../config/store.config';
  * @param reducerEnhancer 增强
  */
 export function createReducer(reducers: ReducersMapObject, reducerEnhancer: ReducerEnhancer): Reducer {
-  return reducerEnhancer(combineReducers(reducers));
+  const rootReducer = combineReducers(reducers) || ((state = {}) => state);
+  return reducerEnhancer(rootReducer);
 }
 
 /**
@@ -20,10 +21,15 @@ export function openDevtool(open: boolean): StoreEnhancer {
   }
   return returnSelf;
 }
-
+/**
+ * 空函数
+ */
 export const noop = () => {
 };
-
+/**
+ * 返回自己的函数
+ * @param m 参数
+ */
 export const returnSelf = m => m;
 
 /**
