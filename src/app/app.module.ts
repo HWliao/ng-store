@@ -1,10 +1,8 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CoreModule } from './core/core.module';
-import { AopTestService } from './core/aop-test.service';
+
 
 @NgModule({
   declarations: [
@@ -15,7 +13,7 @@ import { AopTestService } from './core/aop-test.service';
     AppRoutingModule,
     // CoreModule
   ],
-  providers: [AopTestService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

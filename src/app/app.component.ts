@@ -16,7 +16,7 @@ export class AppComponent {
   count = 0;
 
   constructor(aop: AopService) {
-    // aop.weave(this);
+    aop.weave(this);
     // private storeService: StoreService
     // this.storeService.connect(this);
     // const app = new AppModel();

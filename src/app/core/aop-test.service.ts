@@ -28,7 +28,7 @@ export function TestMethod() {
   };
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AopTestService implements Aspect {
   constructor() { }
 
