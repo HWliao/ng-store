@@ -68,7 +68,9 @@ export class AopService {
     advices.forEach(advice => {
       if (advice.token) {
         const service: Aspect = injector.get(advice.token);
-        service.weave(target);
+        if (service) {
+          service.weave(target);
+        }
       } else if (advice.weave) {
         advice.weave(target);
       } else {

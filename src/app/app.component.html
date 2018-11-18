@@ -1,7 +1,12 @@
 <div style="display: flex;flex-direction: column;align-items: center;">
   <p>{{title}}</p>
   <p>{{count}}</p>
+  <p>
+    <span>{{state1}}</span>
+    <span>{{state2$|async}}</span>
+  </p>
   <button (click)="increase()">increase</button>
   <button (click)="change()">change</button>
+  <button (click)="storeClick()">store service click</button>
 </div>
 <router-outlet></router-outlet>

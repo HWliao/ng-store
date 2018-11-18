@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { StoreService } from './core/store/service/store.service';
-import { AppModel, AppModelType } from './AppModel';
-import { AopTestService, TestField, TestMethod } from './core/aop-test.service';
 import { AopService } from './core/aop';
+import { TestField, TestMethod } from './core/aop-test.service';
+import { StoreService } from './core/store/service/store.service';
+import { Observable, from } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'ns-root',
@@ -15,13 +16,20 @@ export class AppComponent {
 
   count = 0;
 
-  constructor(aop: AopService) {
+  state1 = '';
+
+  state2$: Observable<any>;
+
+  constructor(aop: AopService, private storeService: StoreService) {
     aop.weave(this);
     // private storeService: StoreService
     // this.storeService.connect(this);
     // const app = new AppModel();
     // console.log(Object.keys(AppModelType));
     // console.log(Object.keys(app));
+    this.state2$ = this.storeService.getState$().pipe(
+      map(state => state.testlhw)
+    );
   }
 
   @TestMethod()
@@ -31,5 +39,10 @@ export class AppComponent {
 
   change() {
     this.title = this.title + this.count;
+  }
+
+  storeClick() {
+    this.state1 = this.storeService.getState().testlhw;
+    this.storeService.dispatch({ type: 'testlhw', payload: `${this.title}.${this.count}` });
   }
 }

@@ -11,13 +11,4 @@ import { StoreService } from './service/store.service';
   ]
 })
 export class StoreModule {
-  static forRoot(config?: StoreConfig): ModuleWithProviders {
-    buildStore(config);
-    return {
-      ngModule: StoreModule,
-      providers: [
-        { provide: StoreService, useClass: StoreService }
-      ]
-    };
-  }
 }

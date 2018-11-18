@@ -2,26 +2,6 @@ import { combineReducers, Reducer, ReducersMapObject, StoreEnhancer } from 'redu
 import { ReducerEnhancer } from '../config/store.config';
 
 /**
- * 创建root reducer
- * @param reducers reducers
- * @param reducerEnhancer 增强
- */
-export function createReducer(reducers: ReducersMapObject, reducerEnhancer: ReducerEnhancer): Reducer {
-  const rootReducer = combineReducers(reducers) || ((state = {}) => state);
-  return reducerEnhancer(rootReducer);
-}
-
-/**
- * 开启redux devtool
- * @param open 是否开启
- */
-export function openDevtool(open: boolean): StoreEnhancer {
-  if (open && (<any>window).__REDUX_DEVTOOLS_EXTENSION__) {
-    return (<any>window).__REDUX_DEVTOOLS_EXTENSION__((<any>window).__REDUX_DEVTOOLS_EXTENSION__OPTIONS);
-  }
-  return returnSelf;
-}
-/**
  * 空函数
  */
 export const noop = () => {
