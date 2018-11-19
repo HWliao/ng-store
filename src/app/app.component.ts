@@ -4,6 +4,7 @@ import { TestField, TestMethod } from './core/aop-test.service';
 import { StoreService } from './core/store/service/store.service';
 import { Observable, from } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AnyAction } from 'redux';
 
 @Component({
   selector: 'ns-root',
@@ -44,5 +45,15 @@ export class AppComponent {
   storeClick() {
     this.state1 = this.storeService.getState().testlhw;
     this.storeService.dispatch({ type: 'testlhw', payload: `${this.title}.${this.count}` });
+  }
+  storeChange() {
+    this.storeService.replaceReducer({
+      testlhw: (state = 'lhw1', action?: AnyAction) => {
+        if (action && action.type === 'testlhw') {
+          return action.payload + 'ttt';
+        }
+        return state;
+      }
+    });
   }
 }

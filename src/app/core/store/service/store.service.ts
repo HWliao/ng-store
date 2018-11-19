@@ -1,8 +1,8 @@
 import { Inject, Injectable, Optional } from '@angular/core';
-import { AnyAction, Store } from 'redux';
+import { AnyAction, Store, Reducer, ReducersMapObject } from 'redux';
 import { from, Observable } from 'rxjs';
-import { StoreConfig, STORE_CONFIG_TOKEN } from '../core/config/store.config';
-import { buildStore } from '../core/store';
+import { StoreConfig, STORE_CONFIG_TOKEN, defaultStoreConfig } from '../core/config/store.config';
+import { buildStore, createReducer } from '../core/store';
 
 /**
  * 封装redux的核心服务
@@ -10,9 +10,11 @@ import { buildStore } from '../core/store';
 @Injectable({ providedIn: 'root' })
 export class StoreService {
   private store: Store<any>;
+  private config: StoreConfig;
 
   constructor(@Optional() @Inject(STORE_CONFIG_TOKEN) config?: StoreConfig) {
-    this.store = buildStore(config);
+    this.config = Object.assign({}, defaultStoreConfig, config || {});
+    this.store = buildStore(this.config);
   }
   /**
    * 获取整个state快照
@@ -34,15 +36,11 @@ export class StoreService {
     this.store.dispatch(action);
   }
   /**
-   * 注册一个model
+   * 动态替换reducer
+   * @param nextReducer next reducer
    */
-  register() {
-    // TODO
-  }
-  /**
-   * 销毁一个model
-   */
-  destroy() {
-    // TODO
+  replaceReducer(reducerMap: ReducersMapObject) {
+    const nextReducer = createReducer({ ...this.config.extraReducers, ...reducerMap }, this.config.reducerEnhancer);
+    this.store.replaceReducer(nextReducer);
   }
 }
