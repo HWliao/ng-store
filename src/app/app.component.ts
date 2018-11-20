@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
+import { AnyAction } from 'redux';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { AppModel } from './AppModel';
 import { AopService } from './core/aop';
 import { TestField, TestMethod } from './core/aop-test.service';
+import { Select, Store } from './core/store';
 import { StoreService } from './core/store/service/store.service';
-import { Observable, from } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { AnyAction } from 'redux';
 
 @Component({
   selector: 'ns-root',
@@ -16,6 +18,12 @@ export class AppComponent {
   title = 'ng-store';
 
   count = 0;
+
+  @Store(AppModel)
+  app: AppModel;
+
+  @Select(AppModel)
+  app$: Observable<AppModel>;
 
   state1 = '';
 

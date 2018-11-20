@@ -4,3 +4,4 @@ export { ModelDecorator as Model, HackType as Type } from './core/annotation/Mod
 
 export { StoreService } from './service/store.service';
 export * from './core/config/store.config';
+export { Store, Select } from './core/annotation/Store';

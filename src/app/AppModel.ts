@@ -20,7 +20,7 @@ export class AppModel extends Test {
   count = 0;
   // state key
   title = 'lhw';
-  // 不支持 为被初始化
+  // 不支持 未被初始化
   noInit: string;
   // state key
   fn1 = () => { };
