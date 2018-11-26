@@ -1,6 +1,6 @@
-import { Type, getModuleFactory } from '@angular/core';
-import { AnyAction, Reducer, ReducersMapObject } from 'redux';
+import { Type } from '@angular/core';
 import { produce } from 'immer';
+import { AnyAction, Reducer } from 'redux';
 import { warning } from '../tools/tools';
 import { DESIGN_PARAMTYPES } from './Design';
 
@@ -35,7 +35,7 @@ export function Model(config: ModelConfig | string) {
 
   return (Target: Type<any>) => {
     const params = Reflect.getOwnMetadata(DESIGN_PARAMTYPES, Target);
-    if (params) {
+    if (params && params.length > 0) {
       // 目标类 构造器 不能有参数
       warning('model 类构造函数不能有参数！');
     }
@@ -44,7 +44,10 @@ export function Model(config: ModelConfig | string) {
     const target = new Target();
     // state keys 都是在直接存在实例对象之上属性，在初始化过程中被赋予了初始值
     const stateKeys = <string[]>Reflect.ownKeys(target).filter(key => typeof key === 'string');
-    const initState = stateKeys.reduce((curr, key) => curr[key] = target[key], {});
+    const initState = stateKeys.reduce((curr, key) => {
+      curr[key] = target[key];
+      return curr;
+    }, {});
     stateKeys.forEach(key => Reflect.defineProperty(Target, key, { get: () => ({ key: key, model: Target }), enumerable: true }));
     // action/reducer 存在于原型对象上的函数
     const actionReducers = {};
@@ -72,8 +75,8 @@ export function Model(config: ModelConfig | string) {
           return;
         }
         // 记录action对应的reducer处理函数
+        actionKeys.push(key);
         const actionKey = `${(<ModelConfig>config).name}.${key}`;
-        actionKeys.push(actionKey);
         actionReducers[actionKey] = target[key];
         // 在Target上hack出action type
         Reflect.defineProperty(Target, key, { get: () => actionKey, enumerable: true });
@@ -85,10 +88,13 @@ export function Model(config: ModelConfig | string) {
     // action的payload为一个参数列表
     const createAction: (actinType: string, args: any[]) => AnyAction = (type: string, payload: any[]) => ({ type, payload });
     // 构建reducer 这是一个默认reducer 需要借助immer进行值得处理
+    // 注意这里并没有使用initState作为初始值,在计算过程需要用到target内部的方法
     const reducer: Reducer = (state = initState, action: AnyAction) => {
       if (action && actionReducers[action.type]) {
         const actionReducer = actionReducers[action.type];
-        return produce(state, actionReducer);
+        return produce(state, draftState => {
+          Reflect.apply(actionReducer, draftState, action.payload);
+        });
       }
       return state;
     };
@@ -115,7 +121,7 @@ export function getModel(model: Type<any>): ModelMetadata {
  * 转换model类的类型
  * @param c 目标model类
  */
-export function HackType<T>(c: Type<T>): { [key in keyof T]: StateKeyType<T> } {
+export function HackType<T>(c: Type<T>): Type<T> & { [key in keyof T]: StateKeyType<T> } {
   return <Type<T> & { [key in keyof T]: StateKeyType<T> }>c;
 }
 /**

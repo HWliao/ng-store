@@ -1,9 +1,11 @@
 import { Injectable, Type } from '@angular/core';
 import { Aspect } from '../../aop';
-import { MD_SELECT, MD_STORE, SelectMetadata, StroeMetaData } from '../core/annotation/Store';
+import { MD_SELECT, MD_STORE, SelectMetadata, StroeMetaData } from '../core/annotation/StoreType';
 import { getModel, ModelMetadata } from '../core/annotation/Model';
 import { StoreService } from './store.service';
 import { ReducersMapObject } from 'redux';
+import { warning } from '../core/tools/tools';
+import { map, distinctUntilChanged, publishBehavior, share } from 'rxjs/operators';
 
 /**
  * store aspect
@@ -32,13 +34,76 @@ export class StoreAspect implements Aspect {
     // 收集原数据中的model类并进行注册
     this.collectMetadata(storeMds.concat(selectMds));
     // 生成代理store
+    storeMds.forEach(this.createStoreProxy(target));
     // 生成state观察者
-    this.store.getState$().pipe();
+    selectMds.forEach(this.createSelectProxy(target));
   }
 
-  private collectMetadata(storeMds: (StroeMetaData | SelectMetadata)[]) {
+  /**
+   * 根据select 元数据在目标对象生成select观察者对象
+   * @param target 目标对象
+   */
+  private createSelectProxy(target: any) {
+    return (selectMd: SelectMetadata) => {
+      const propertyKey = selectMd.propertyKey;
+      const stateKey = selectMd.key;
+      const model = getModel(selectMd.model);
+      const modelName = model.config.name;
+      const proxy$ = this.store.getState$().pipe(
+        distinctUntilChanged(),
+        map(state => state[modelName]),
+        map(modelState => stateKey ? modelState[stateKey] : modelState),
+        distinctUntilChanged(),
+        share()
+      );
+      Reflect.defineProperty(target, propertyKey, {
+        set: () => { warning(`[redux]model ${modelName} select ${propertyKey} ${stateKey} 不支持直接赋值`); },
+        get: () => proxy$,
+        enumerable: true
+      });
+    };
+  }
+
+  /**
+   * 根据store 元数据在目标对象上生成store model代理
+   * @param target 目标元素
+   */
+  private createStoreProxy(target: any) {
+    return (storeMd: StroeMetaData) => {
+      const propertyKey = storeMd.propertyKey;
+      const model = getModel(storeMd.model);
+      const proxy = {};
+      const modelName = model.config.name;
+      const createAction = model.config.createAction || model.createAction;
+
+      model.stateKeys.forEach(stateKey => {
+        Reflect.defineProperty(proxy, stateKey, {
+          set: (v: any) => { warning(`[redux]model ${modelName} store proxy ${propertyKey} ${stateKey} 不支持直接修改`); },
+          get: () => this.store.getState()[modelName][stateKey],
+          enumerable: true
+        });
+      });
+      model.actionKeys.forEach(actionKey => {
+        Reflect.defineProperty(proxy, actionKey, {
+          set: () => { warning(`[redux]model ${modelName} store proxy ${propertyKey} ${actionKey} 不支持修改`); },
+          get: () => (...args: any[]) => this.store.dispatch(createAction(`${modelName}.${actionKey}`, args)),
+          enumerable: true
+        });
+      });
+
+      Reflect.defineProperty(target, propertyKey, {
+        get: () => proxy,
+        enumerable: true
+      });
+    };
+  }
+  /**
+   * 搜集目标对象上的元数据,并注册reducers
+   * @param mds 元数据
+   */
+  private collectMetadata(mds: (StroeMetaData | SelectMetadata)[]) {
     let needRelaceReducer = false;
-    storeMds.forEach(md => {
+    mds.forEach(md => {
       const model = getModel(md.model);
       const name = model.config.name;
       if (!this.metadata[name]) {
@@ -48,7 +113,10 @@ export class StoreAspect implements Aspect {
     });
     if (needRelaceReducer) {
       const reducers: ReducersMapObject = Object.values(this.metadata)
-        .reduce((curr, md) => curr[md.config.name] = (md.config.reducer || md.reducer), {});
+        .reduce((curr, md) => {
+          curr[md.config.name] = (md.config.reducer || md.reducer);
+          return curr;
+        }, {});
       this.store.replaceReducer(reducers);
     }
   }

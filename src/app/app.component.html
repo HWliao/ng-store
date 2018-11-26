@@ -5,9 +5,11 @@
     <span>{{state1}}</span>
     <span>{{state2$|async}}</span>
   </p>
+  <p>{{appTitle$|async}}</p>
   <button (click)="increase()">increase</button>
   <button (click)="change()">change</button>
   <button (click)="storeClick()">store service click</button>
   <button (click)="storeChange()">store change reducer</button>
+  <button (click)="appTitleClick()">app title $</button>
 </div>
 <router-outlet></router-outlet>

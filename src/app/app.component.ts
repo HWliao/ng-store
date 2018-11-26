@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AnyAction } from 'redux';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AppModel } from './AppModel';
+import { AppModel, AppModelType } from './AppModel';
 import { AopService } from './core/aop';
 import { TestField, TestMethod } from './core/aop-test.service';
 import { Select, Store } from './core/store';
@@ -22,8 +22,11 @@ export class AppComponent {
   @Store(AppModel)
   app: AppModel;
 
-  @Select(AppModel)
+  @Select(AppModelType)
   app$: Observable<AppModel>;
+
+  @Select(AppModelType.title)
+  appTitle$: Observable<string>;
 
   state1 = '';
 
@@ -63,5 +66,8 @@ export class AppComponent {
         return state;
       }
     });
+  }
+  appTitleClick() {
+    this.app.setTitle(this.app.title + '1');
   }
 }

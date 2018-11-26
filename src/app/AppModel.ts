@@ -1,4 +1,4 @@
-import { Model, Type } from './core/store';
+import { Model, Hack } from './core/store';
 
 class Test {
   test = 't1';
@@ -42,4 +42,4 @@ export class AppModel extends Test {
   }
 }
 
-export const AppModelType = Type(AppModel);
+export const AppModelType = Hack(AppModel);
