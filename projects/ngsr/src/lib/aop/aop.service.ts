@@ -1,5 +1,5 @@
 import { Injectable, InjectionToken, Injector, Type } from '@angular/core';
-import { warning } from '../store/core/tools/tools';
+import { warning, getConstructor } from '../tools';
 
 // aspect
 // advice 通知
@@ -7,12 +7,12 @@ import { warning } from '../store/core/tools/tools';
 // weaving 编织
 // target object 目标元素
 /**
- * 在target object的metadata关于aspect advice的key
+ * 在target object的metadata关于aspect advice的标识
  * value为一个数组,内部存储了附加在target object上的aspect service/handler
  */
 export const MD_ADVICE_ASPECT = '@@[aop]advice.aspect';
 /**
- * 在target object上为pointcut注册对应的处理aspect
+ * 在target object上为pointcut注册对应的aspect
  * @param target 目标对象
  * @param name aspect name
  * @param token angular inject token
@@ -20,13 +20,13 @@ export const MD_ADVICE_ASPECT = '@@[aop]advice.aspect';
  */
 export function registerPointcut(target: Type<any>, name: string, token?: Type<any> | InjectionToken<any>, weave?: (any) => any) {
   if (!token && !weave) {
-    warning(`[register pointcut] token/handler 不能都为空!`);
+    warning(`[aop]registerPointcut token/handler 不能都为空!`);
   }
   const advices: AspectAdvice[] = Reflect.getOwnMetadata(MD_ADVICE_ASPECT, target) || [];
   const theAdvice = advices.find(advice => advice.name === name);
   // 待注册的token或者handler与原有的token/handler 不一致则错误提示
   if (theAdvice && ((token && token !== theAdvice.token) || (weave && weave !== theAdvice.weave))) {
-    warning(`[register pointcut] aspect ${name} 已经存在 token/handler,不能在注册其他的token/handler`);
+    warning(`[aop]registerPointcut aspect ${name} 已经被注册了token/handler`);
   } else if (!theAdvice) {
     advices.push({ name, token, weave });
     Reflect.defineMetadata(MD_ADVICE_ASPECT, advices, target);
@@ -34,10 +34,20 @@ export function registerPointcut(target: Type<any>, name: string, token?: Type<a
 }
 /**
  * piontcut aspect advice
+ * token或者weave必须存在一个,优先使用token
  */
 export interface AspectAdvice {
+  /**
+   * aspect 位置名称
+   */
   name: string;
+  /**
+   * 用于从angular中获取服务的token
+   */
   token?: Type<any> | InjectionToken<any>;
+  /**
+   * 编织函数
+   */
   weave?: (target: any) => any;
 }
 
@@ -59,22 +69,20 @@ export interface Aspect {
  */
 @Injectable({ providedIn: 'root' })
 export class AopService {
-  constructor(private readonly injector: Injector) { }
+  constructor(private readonly root: Injector) { }
   weave(target: any, theInjector?: Injector) {
-    const injector = theInjector || this.injector;
-    const targetProto = Reflect.getPrototypeOf(target);
-    const constructor = targetProto.constructor;
+    // 优先使用参数中给定的注入器
+    const injector = theInjector || this.root;
+
+    const constructor = getConstructor(target);
     const advices: AspectAdvice[] = Reflect.getOwnMetadata(MD_ADVICE_ASPECT, constructor) || [];
+
     advices.forEach(advice => {
-      if (advice.token) {
-        const service: Aspect = injector.get(advice.token);
-        if (service) {
-          service.weave(target);
-        }
-      } else if (advice.weave) {
-        advice.weave(target);
+      const service: Aspect = injector.get(advice.token, { weave: advice.weave });
+      if (service && service.weave && typeof service.weave === 'function') {
+        service.weave(target);
       } else {
-        warning(`[AopService weave] aspect ${advice.name} 没有对应的token/handler`);
+        warning(`[aop]weave aspect ${advice.name} 没有对应的token/handler`);
       }
     });
   }

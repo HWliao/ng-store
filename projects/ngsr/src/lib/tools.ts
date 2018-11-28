@@ -1,4 +1,10 @@
-
+/**
+ * 获取给定元素的类构造器
+ * @param target 目标元素
+ */
+export function getConstructor(target: any): Function {
+  return Reflect.getPrototypeOf(target).constructor;
+}
 /**
  * 空函数
  */
@@ -14,7 +20,7 @@ export const returnSelf = m => m;
  * @param obj The object to inspect.
  * @returns True if the argument appears to be a plain object.
  */
-export default function isPlainObject(obj: any): boolean {
+export function isPlainObject(obj: any): boolean {
   if (typeof obj !== 'object' || obj === null) {
     return false;
   }
