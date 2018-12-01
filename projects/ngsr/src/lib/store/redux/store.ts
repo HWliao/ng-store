@@ -1,6 +1,6 @@
-import { applyMiddleware, compose, createStore, Store, StoreEnhancer, ReducersMapObject, combineReducers, Reducer } from 'redux';
-import { defaultStoreConfig, StoreConfig, ReducerEnhancer } from './config/store.config';
-import { returnSelf } from './tools/tools';
+import { applyMiddleware, combineReducers, compose, createStore, Reducer, ReducersMapObject, Store, StoreEnhancer } from 'redux';
+import { returnSelf, isEmptyObject } from '../../tools';
+import { defaultStoreConfig, ReducerEnhancer, StoreConfig } from './store.config';
 
 /**
  * 构建redux store
@@ -20,7 +20,7 @@ export function buildStore(config: StoreConfig = {}): Store {
  * @param reducerEnhancer 增强
  */
 export function createReducer(reducers: ReducersMapObject, reducerEnhancer: ReducerEnhancer): Reducer {
-  const rootReducer = combineReducers(reducers) || ((state = {}) => state);
+  const rootReducer = isEmptyObject(reducers) ? ((state = {}) => state) : combineReducers(reducers);
   return reducerEnhancer(rootReducer);
 }
 

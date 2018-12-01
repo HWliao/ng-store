@@ -1,4 +1,4 @@
-import { Model, Hack } from './core/store';
+import { Model, Hack } from 'ngsr';
 
 class Test {
   test = 't1';
@@ -17,9 +17,9 @@ export class AppModel extends Test {
     this.fn2 = () => { };
   }
   // state key
-  count = 0;
+  count = 1;
   // state key
-  title = 'lhw';
+  title = 'lhwtest33';
   // 不支持 未被初始化
   noInit: string;
   // state key
@@ -34,11 +34,14 @@ export class AppModel extends Test {
 
   // action
   increase() {
-    this.count++;
+    this.count += this.getNum();
   }
   // action
   setTitle(title: string) {
     this.title = title;
+  }
+  getNum() {
+    return 1;
   }
 }
 

@@ -2,6 +2,10 @@
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
   "dest": "../../dist/ngsr",
   "lib": {
-    "entryFile": "src/public_api.ts"
+    "entryFile": "src/index.ts",
+    "umdModuleIds": {
+      "redux": "redux",
+      "immer": "immer"
+    }
   }
 }
