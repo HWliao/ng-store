@@ -1,7 +1,7 @@
 import { Type } from '@angular/core';
-import { StroeMetaData, MD_STORE, registerReduxPointcut } from './definitions';
-import { warning, getConstructor } from '../../tools';
+import { warning } from '../../tools';
 import { StoreAspect } from '../service/store-aspect.service';
+import { MD_STORE, registerReduxPointcut, StroeMetaData } from './definitions';
 
 /**
  * 标记property为某个model的代理
