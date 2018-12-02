@@ -43,6 +43,10 @@ export class AppModel extends Test {
   getNum() {
     return 1;
   }
+
+  setCount(count: number) {
+    this.count = count;
+  }
 }
 
 export const AppModelType = Hack(AppModel);

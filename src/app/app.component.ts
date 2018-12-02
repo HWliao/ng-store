@@ -1,10 +1,7 @@
 import { Component } from '@angular/core';
-import { AnyAction } from 'redux';
+import { AopService, Select, Store } from 'ngsr';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { AppModel, AppModelType } from './AppModel';
-import { Store, Select, AopService, StoreService } from 'ngsr';
-import { EventService } from 'projects/ngsr/src';
 import { EventTestService } from './core/event-test.service';
 
 @Component({
@@ -22,7 +19,6 @@ export class AppComponent {
 
   constructor(
     aop: AopService,
-    private storeService: StoreService,
     private eventService: EventTestService
   ) {
     aop.weave(this);

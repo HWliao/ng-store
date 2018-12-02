@@ -1,12 +1,14 @@
 import { Injectable, Type } from '@angular/core';
 import { Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, skip } from 'rxjs/operators';
 import { Select } from '../../store/annotation/selelct.annotation';
 import { Store } from '../../store/annotation/store.annotation';
 import { getConstructor, warning } from '../../tools';
 import { EventModel, EventModelHack } from '../model/event.model';
 import { AopService } from '../../aop/aop.service';
-
+/**
+ * 事件服务
+ */
 @Injectable({ providedIn: 'root' })
 export class EventService {
 
@@ -15,7 +17,11 @@ export class EventService {
   @Select(EventModelHack)
   private event$: Observable<EventModel>;
 
+  /**
+   *
+   */
   private subscriptions = {};
+
   constructor(aop: AopService) {
     aop.weave(this);
   }
@@ -24,7 +30,7 @@ export class EventService {
    * 发布事件
    * @param event 事件
    */
-  publish(event: any) {
+  publish<T>(event: T) {
     this.event.publish(event);
   }
   /**
@@ -32,7 +38,7 @@ export class EventService {
    * @param type 事件类型
    * @param handler 处理函数
    */
-  subscribe(type: Type<any>, handler: (event: any) => void) {
+  subscribe<T>(type: Type<T>, handler: (event: T) => void) {
     const theType = <any>type;
     if (this.subscriptions[theType] && this.subscriptions[theType][handler]) {
       // 同一个事件类型,同一个处理函数只能订阅一次
@@ -41,6 +47,7 @@ export class EventService {
     }
     const subscription = this.event$
       .pipe(
+        skip(1),
         map(event => event.event),
         filter(event => event && (getConstructor(event) === type))
       )
@@ -53,7 +60,7 @@ export class EventService {
    * @param type 事件类型
    * @param handler 处理函数
    */
-  unsubscribe(type: Type<any>, handler: Function) {
+  unsubscribe<T>(type: Type<T>, handler: (event: T) => void) {
     const theType = <any>type;
     if (this.subscriptions[theType] && this.subscriptions[theType][handler]) {
       this.subscriptions[theType][handler].unsubscribe();

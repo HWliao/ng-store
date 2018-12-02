@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { EventService } from 'ngsr';
+import { EventService, Store, AopService } from 'ngsr';
+import { AppModel } from '../AppModel';
 
 class TestEvent {
   count: number;
@@ -7,13 +8,16 @@ class TestEvent {
 
 @Injectable({ providedIn: 'root' })
 export class EventTestService {
-  constructor(private event: EventService) {
-    console.log(1);
-    this.event.subscribe(TestEvent, function (e) {
-      console.log(3);
-      console.log(e);
+
+  @Store(AppModel)
+  private app: AppModel;
+
+  constructor(aop: AopService, private event: EventService) {
+    aop.weave(this);
+
+    this.event.subscribe(TestEvent, (e) => {
+      this.app.setCount(e.count);
     });
-    console.log(2);
   }
 
   publish() {
