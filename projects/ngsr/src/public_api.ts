@@ -12,3 +12,5 @@ export { ModelConfig } from './lib/store/annotation/definitions';
 export { Model, HackType as Hack } from './lib/store/annotation/model.annotation';
 export { Store } from './lib/store/annotation/store.annotation';
 export { Select } from './lib/store/annotation/selelct.annotation';
+
+export { EventService } from './lib/event-stream/service/event.service';

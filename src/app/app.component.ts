@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { AppModel, AppModelType } from './AppModel';
 import { Store, Select, AopService, StoreService } from 'ngsr';
+import { EventService } from 'projects/ngsr/src';
+import { EventTestService } from './core/event-test.service';
 
 @Component({
   selector: 'ns-root',
@@ -18,7 +20,11 @@ export class AppComponent {
   @Select(AppModelType.title)
   title$: Observable<string>;
 
-  constructor(aop: AopService, private storeService: StoreService) {
+  constructor(
+    aop: AopService,
+    private storeService: StoreService,
+    private eventService: EventTestService
+  ) {
     aop.weave(this);
   }
 
@@ -29,5 +35,8 @@ export class AppComponent {
 
   change() {
     this.app.setTitle(this.app.title + this.app.title);
+  }
+  publish() {
+    this.eventService.publish();
   }
 }

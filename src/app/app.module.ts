@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
+import { EventTestService } from './core/event-test.service';
 
 
 @NgModule({
@@ -16,4 +17,6 @@ import { CoreModule } from './core/core.module';
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(test: EventTestService) { }
+}

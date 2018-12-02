@@ -49,7 +49,6 @@ export class StoreAspect implements Aspect {
       const model = getModel(selectMd.model);
       const modelName = model.config.name;
       const proxy$ = this.store.getState$().pipe(
-        distinctUntilChanged(),
         map(state => state[modelName]),
         map(modelState => stateKey ? modelState[stateKey] : modelState),
         distinctUntilChanged(),
