@@ -20,10 +20,10 @@
     ],
     "paths": {
       "ngsr": [
-        "dist/ngsr"
+        "projects/ngsr/src"
       ],
       "ngsr/*": [
-        "dist/ngsr/*"
+        "projects/ngsr/src/*"
       ]
     }
   }
