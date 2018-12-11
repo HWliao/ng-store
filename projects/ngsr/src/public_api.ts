@@ -14,3 +14,5 @@ export { Store } from './lib/store/annotation/store.annotation';
 export { Select } from './lib/store/annotation/selelct.annotation';
 
 export { EventService } from './lib/event-stream/service/event.service';
+export { Publish } from './lib/event-stream/annotation/publish.annotation';
+export { Subscribe } from './lib/event-stream/annotation/subscribe.annotation';

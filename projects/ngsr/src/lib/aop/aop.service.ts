@@ -75,9 +75,9 @@ export class AopService {
     const injector = theInjector || this.root;
 
     const constructor = getConstructor(target);
-    const advices: AspectAdvice[] = Reflect.getOwnMetadata(MD_ADVICE_ASPECT, constructor) || [];
+    const advices: { [key: string]: AspectAdvice } = Reflect.getOwnMetadata(MD_ADVICE_ASPECT, constructor) || [];
 
-    advices.forEach(advice => {
+    Object.values(advices).forEach(advice => {
       const service: Aspect = injector.get(advice.token, { weave: advice.weave });
       if (service && service.weave && typeof service.weave === 'function') {
         service.weave(target);

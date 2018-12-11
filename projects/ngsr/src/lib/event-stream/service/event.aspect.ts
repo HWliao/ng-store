@@ -15,7 +15,7 @@ export function registerEventPointcut(target: Type<any>) {
  * event stream aspect service
  */
 @Injectable({ providedIn: 'root' })
-export class EventAspect implements Aspect, OnDestroy {
+export class EventAspect implements Aspect {
 
   constructor(private event: EventService) { }
 
@@ -44,6 +44,9 @@ export class EventAspect implements Aspect, OnDestroy {
     });
     if (subscribes && subscribes.length > 0) {
       const ngOnDestroy: Function = target.ngOnDestroy;
+      if (typeof ngOnDestroy !== 'function') {
+        warning(`[event-stream]存在订阅者的服务需要实现angular的OnDestroy,需要用于动态添加回收订阅的方法`);
+      }
       target.ngOnDestroy = () => {
         if (typeof ngOnDestroy === 'function') { Reflect.apply(ngOnDestroy, target, []); }
         subscribes.forEach(subscribe => this.event.unsubscribe(subscribe.event, subscribe.method));
@@ -68,9 +71,5 @@ export class EventAspect implements Aspect, OnDestroy {
         enumerable: true
       });
     });
-  }
-
-  ngOnDestroy(): void {
-    throw new Error('Method not implemented.');
   }
 }

@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { EventService, Store, AopService } from 'ngsr';
+import { Injectable, OnDestroy } from '@angular/core';
+import { AopService, Publish, Store, Subscribe } from 'ngsr';
 import { AppModel } from '../AppModel';
 
 class TestEvent {
@@ -7,22 +7,26 @@ class TestEvent {
 }
 
 @Injectable({ providedIn: 'root' })
-export class EventTestService {
+export class EventTestService implements OnDestroy {
 
   @Store(AppModel)
   private app: AppModel;
 
-  constructor(aop: AopService, private event: EventService) {
+  constructor(aop: AopService) {
     aop.weave(this);
-
-    this.event.subscribe(TestEvent, (e) => {
-      this.app.setCount(e.count);
-    });
   }
 
-  publish() {
+  @Publish(TestEvent)
+  publish(): TestEvent {
     const event = new TestEvent();
     event.count = 100;
-    this.event.publish(event);
+    return event;
   }
+
+  @Subscribe(TestEvent)
+  sub(e: TestEvent) {
+    this.app.setCount(e.count);
+  }
+
+  ngOnDestroy() { }
 }
