@@ -22,13 +22,13 @@ export function registerPointcut(target: Type<any>, name: string, token?: Type<a
   if (!token && !weave) {
     warning(`[aop]registerPointcut token/handler 不能都为空!`);
   }
-  const advices: AspectAdvice[] = Reflect.getOwnMetadata(MD_ADVICE_ASPECT, target) || [];
-  const theAdvice = advices.find(advice => advice.name === name);
+  const advices: { [key: string]: AspectAdvice } = Reflect.getOwnMetadata(MD_ADVICE_ASPECT, target) || {};
+  const theAdvice = advices[name];
   // 待注册的token或者handler与原有的token/handler 不一致则错误提示
   if (theAdvice && ((token && token !== theAdvice.token) || (weave && weave !== theAdvice.weave))) {
     warning(`[aop]registerPointcut aspect ${name} 已经被注册了token/handler`);
   } else if (!theAdvice) {
-    advices.push({ name, token, weave });
+    advices[name] = { name, token, weave };
     Reflect.defineMetadata(MD_ADVICE_ASPECT, advices, target);
   }
 }

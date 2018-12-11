@@ -15,9 +15,19 @@ export interface SubscribeMetadata {
   /**
    * event type class
    */
-  type: Type<any>;
+  event: Type<any>;
   /**
    * 被标记的属性
    */
+  propertyKey: string;
+}
+/**
+ * event stream 发布者通知标识
+ */
+export const MD_EVENT_PUB_ADVICE = '@@[event-stream]publis';
+/**
+ * 发布者元数据
+ */
+export interface PublishMetadata {
   propertyKey: string;
 }

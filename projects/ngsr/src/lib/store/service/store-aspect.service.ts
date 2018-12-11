@@ -28,8 +28,11 @@ export class StoreAspect implements Aspect {
     const constructor = getConstructor(target);
 
     // 检查目标类上的元数据
-    const storeMds: StroeMetaData[] = Reflect.getOwnMetadata(MD_STORE, constructor) || [];
-    const selectMds: SelectMetadata[] = Reflect.getOwnMetadata(MD_SELECT, constructor) || [];
+    const storeMdObj: { [key: string]: StroeMetaData } = Reflect.getOwnMetadata(MD_STORE, constructor) || {};
+    const selectMdObj: { [key: string]: SelectMetadata } = Reflect.getOwnMetadata(MD_SELECT, constructor) || {};
+    const storeMds = Object.values(storeMdObj);
+    const selectMds = Object.values(selectMdObj);
+
     // 收集原数据中的model类并进行注册
     this.collectMetadata(storeMds.concat(selectMds));
     // 生成代理store

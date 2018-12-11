@@ -15,12 +15,12 @@ export function Select(stateKey: Type<any> | StateKeyType<any>) {
   }
   return function (target: any, propertyKey: string) {
     const { constructor } = target;
-    const mds: SelectMetadata[] = Reflect.getOwnMetadata(MD_SELECT, constructor) || [];
-    if (mds.find(md => md.propertyKey === propertyKey)) {
-      warning(`propertykey ${propertyKey}已经有个select的标记了`);
+    const mds: { [key: string]: SelectMetadata } = Reflect.getOwnMetadata(MD_SELECT, constructor) || [];
+    if (mds[propertyKey]) {
+      warning(`[redux]select propertykey ${propertyKey}已经有个select的标记了`);
     } else {
       const tmp = <StateKeyType<any>>stateKey;
-      mds.push({ propertyKey, ...tmp });
+      mds[propertyKey] = { propertyKey, ...tmp };
       Reflect.defineMetadata(MD_SELECT, mds, constructor);
       registerReduxPointcut(constructor, StoreAspect);
     }

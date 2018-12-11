@@ -64,7 +64,7 @@ export class EventService {
     const theType = <any>type;
     if (this.subscriptions[theType] && this.subscriptions[theType][handler]) {
       this.subscriptions[theType][handler].unsubscribe();
-      this.subscriptions[theType][handler] = undefined;
+      delete this.subscriptions[theType][handler];
     }
   }
 }
