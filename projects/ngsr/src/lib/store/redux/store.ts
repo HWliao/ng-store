@@ -1,5 +1,5 @@
 import { applyMiddleware, combineReducers, compose, createStore, Reducer, ReducersMapObject, Store, StoreEnhancer } from 'redux';
-import { returnSelf, isEmptyObject } from '../../tools';
+import { isEmptyObject, returnSelf } from '../../tools';
 import { defaultStoreConfig, ReducerEnhancer, StoreConfig } from './store.config';
 
 /**

@@ -17,14 +17,9 @@ export class EventService {
   @Select(EventModelHack)
   private event$: Observable<EventModel>;
 
-  /**
-   *
-   */
   private subscriptions = {};
 
-  constructor(aop: AopService) {
-    aop.weave(this);
-  }
+  constructor(aop: AopService) { aop.weave(this); }
 
   /**
    * 发布事件
@@ -42,7 +37,7 @@ export class EventService {
     const theType = <any>type;
     if (this.subscriptions[theType] && this.subscriptions[theType][handler]) {
       // 同一个事件类型,同一个处理函数只能订阅一次
-      warning(`[event-stream]type ${type} handler ${handler} 已经订阅了,不能再次订阅.`);
+      warning(`type ${type} handler ${handler} 已经订阅了,不能再次订阅.`);
       return;
     }
     const subscription = this.event$

@@ -1,7 +1,6 @@
 import { Type } from '@angular/core';
 import { DESIGN_PARAMTYPES } from '../../design-metadata';
-import { checkArgument, warning } from '../../tools';
-import { MD_EVENT_SUB_ADVICE, SubscribeMetadata } from '../definitions';
+import { checkArgument, MD_EVENT_SUB_ADVICE, SubscribeMetadata, warning } from '../definitions';
 import { registerEventPointcut } from '../service/event.aspect';
 
 /**

@@ -1,7 +1,7 @@
-import { Injectable, Type, OnDestroy } from '@angular/core';
-import { getConstructor, warning } from 'ngsr/lib/tools';
+import { Injectable, Type } from '@angular/core';
+import { getConstructor } from 'ngsr/lib/tools';
 import { Aspect, registerPointcut } from '../../aop/aop.service';
-import { MD_EVENT_ASPECT, MD_EVENT_PUB_ADVICE, MD_EVENT_SUB_ADVICE, PublishMetadata, SubscribeMetadata } from '../definitions';
+import { MD_EVENT_ASPECT, MD_EVENT_PUB_ADVICE, MD_EVENT_SUB_ADVICE, PublishMetadata, SubscribeMetadata, warning } from '../definitions';
 import { EventService } from './event.service';
 
 /**
@@ -45,7 +45,7 @@ export class EventAspect implements Aspect {
     if (subscribes && subscribes.length > 0) {
       const ngOnDestroy: Function = target.ngOnDestroy;
       if (typeof ngOnDestroy !== 'function') {
-        warning(`[event-stream]存在订阅者的服务需要实现angular的OnDestroy,需要用于动态添加回收订阅的方法`);
+        warning(`存在订阅者的服务需要实现angular的OnDestroy,需要用于动态添加回收订阅的方法`);
       }
       target.ngOnDestroy = () => {
         if (typeof ngOnDestroy === 'function') { Reflect.apply(ngOnDestroy, target, []); }
@@ -62,7 +62,7 @@ export class EventAspect implements Aspect {
     pubs.forEach(pub => {
       const method = target[pub.propertyKey];
       Reflect.defineProperty(target, pub.propertyKey, {
-        set: () => warning(`[event-stream]${pub.propertyKey} 不能通过setter赋值`),
+        set: () => warning(`${pub.propertyKey} 不能通过setter赋值`),
         get: () => (...args: any[]) => {
           const data = Reflect.apply(method, target, args);
           this.event.publish(data);

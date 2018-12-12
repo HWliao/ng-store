@@ -8,7 +8,7 @@ export { AopService, Aspect, AspectAdvice, registerPointcut } from './lib/aop/ao
 export { ReducerEnhancer, StoreConfig, STORE_CONFIG_TOKEN } from './lib/store/redux/store.config';
 export { StoreService } from './lib/store/service/store.service';
 
-export { ModelConfig } from './lib/store/annotation/definitions';
+export { ModelConfig } from './lib/store/definitions';
 export { Model, HackType as Hack } from './lib/store/annotation/model.annotation';
 export { Store } from './lib/store/annotation/store.annotation';
 export { Select } from './lib/store/annotation/selelct.annotation';

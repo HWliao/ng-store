@@ -1,9 +1,8 @@
 import { Type } from '@angular/core';
 import { produce } from 'immer';
 import { AnyAction, Reducer } from 'redux';
-import { DESIGN_PARAMTYPES } from '../../design-metadata';
-import { checkArgument } from '../../tools';
-import { MD_MODEL_TOKEN, ModelConfig, ModelMetadata, StateKeyType } from './definitions';
+import { MD_MODEL_TOKEN, ModelConfig, ModelMetadata, StateKeyType, checkArgument } from '../definitions';
+import { getParamtypes } from 'ngsr/lib/tools';
 
 /**
  * 用来检查model name是否唯一
@@ -15,21 +14,19 @@ const modelNameMap = {};
  * @param model model配置
  */
 export function Model(config: ModelConfig | string) {
-  if (typeof config === 'string') {
-    config = { name: config };
-  }
+  config = typeof config === 'string' ? { name: config } : config;
 
-  checkArgument(config.name && config.name.trim() !== '', '[redux]model name 不能为null/undefined/空字符串');
-  checkArgument(!modelNameMap[config.name], '[redux]model name ${config.name} 已经存在了,model name必须唯一');
+  checkArgument(config.name && config.name.trim() !== '', `model name 不能为null/undefined/空字符串`);
+  checkArgument(!modelNameMap[config.name], `model ${config.name} 已经存在了,model name必须唯一`);
   checkArgument(
     !!((!config.reducer && !config.createAction) || (config.reducer && config.createAction)),
-    '[redux]自定义 reducer和createAction必须同时存在或者不存在!'
+    '自定义 reducer和createAction必须同时存在或者不存在!'
   );
   config = Object.assign({}, config);
 
   return (Target: Type<any>) => {
-    const params = Reflect.getOwnMetadata(DESIGN_PARAMTYPES, Target);
-    checkArgument(!params || params.length === 0, '[redux]model 类构造函数不能有参数！');
+    const params = getParamtypes(Target);
+    checkArgument(!params || params.length === 0, `model 类构造函数不能有参数！`);
 
     const target = new Target();
 

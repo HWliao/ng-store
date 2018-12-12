@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, InjectionToken, Type } from '@angular/core';
 import { ReducersMapObject } from 'redux';
 import { distinctUntilChanged, map, share } from 'rxjs/operators';
-import { Aspect } from '../../aop/aop.service';
+import { Aspect, registerPointcut } from '../../aop/aop.service';
 import { getConstructor, warning } from '../../tools';
-import { MD_SELECT, MD_STORE, ModelMetadata, SelectMetadata, StroeMetaData } from '../annotation/definitions';
 import { getModel } from '../annotation/model.annotation';
+import { MD_ASPECT_STORE, MD_SELECT, MD_STORE, ModelMetadata, SelectMetadata, StroeMetaData } from '../definitions';
 import { StoreService } from './store.service';
 
 /**
@@ -58,7 +58,7 @@ export class StoreAspect implements Aspect {
         share()
       );
       Reflect.defineProperty(target, propertyKey, {
-        set: () => { warning(`[redux]model ${modelName} select ${propertyKey} ${stateKey} 不支持直接赋值`); },
+        set: () => { warning(`${propertyKey} 不能赋值`); },
         get: () => proxy$,
         enumerable: true
       });
@@ -79,14 +79,14 @@ export class StoreAspect implements Aspect {
 
       model.stateKeys.forEach(stateKey => {
         Reflect.defineProperty(proxy, stateKey, {
-          set: (v: any) => { warning(`[redux]model ${modelName} store proxy ${propertyKey} ${stateKey} 不支持直接修改`); },
+          set: (v: any) => { warning(`${propertyKey} 不能赋值`); },
           get: () => this.store.getState()[modelName][stateKey],
           enumerable: true
         });
       });
       model.actionKeys.forEach(actionKey => {
         Reflect.defineProperty(proxy, actionKey, {
-          set: () => { warning(`[redux]model ${modelName} store proxy ${propertyKey} ${actionKey} 不支持修改`); },
+          set: () => { warning(`${propertyKey}不能赋值`); },
           get: () => (...args: any[]) => this.store.dispatch(createAction(`${modelName}.${actionKey}`, args)),
           enumerable: true
         });
@@ -121,4 +121,12 @@ export class StoreAspect implements Aspect {
       this.store.replaceReducer(reducers);
     }
   }
+}
+
+/**
+ * 注册redux pointcut
+ * @param target 目标对象
+ */
+export function registerReduxPointcut(target: Type<any>) {
+  return registerPointcut(target, MD_ASPECT_STORE, StoreAspect);
 }

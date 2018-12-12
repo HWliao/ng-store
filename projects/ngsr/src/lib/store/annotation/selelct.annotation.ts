@@ -1,7 +1,6 @@
 import { Type } from '@angular/core';
-import { warning } from '../../tools';
-import { StoreAspect } from '../service/store-aspect.service';
-import { MD_MODEL_TOKEN, MD_SELECT, registerReduxPointcut, SelectMetadata, StateKeyType } from './definitions';
+import { MD_MODEL_TOKEN, MD_SELECT, SelectMetadata, StateKeyType, warning } from '../definitions';
+import { registerReduxPointcut } from '../service/store-aspect.service';
 
 /**
  * 从redux的store中监听某个
@@ -17,12 +16,12 @@ export function Select(stateKey: Type<any> | StateKeyType<any>) {
     const { constructor } = target;
     const mds: { [key: string]: SelectMetadata } = Reflect.getOwnMetadata(MD_SELECT, constructor) || [];
     if (mds[propertyKey]) {
-      warning(`[redux]select propertykey ${propertyKey}已经有个select的标记了`);
+      warning(`propertykey ${propertyKey}已经有个select的标记了`);
     } else {
       const tmp = <StateKeyType<any>>stateKey;
       mds[propertyKey] = { propertyKey, ...tmp };
       Reflect.defineMetadata(MD_SELECT, mds, constructor);
-      registerReduxPointcut(constructor, StoreAspect);
+      registerReduxPointcut(constructor);
     }
   };
 }

@@ -1,11 +1,12 @@
-import { InjectionToken, Type } from '@angular/core';
+import { Type } from '@angular/core';
 import { AnyAction, Reducer } from 'redux';
-import { registerPointcut } from '../../aop/aop.service';
+import { checkArgumentFn, warningFn } from '../tools';
 
+export const REDUX_TITLE = '@@[redux]';
 /**
  * 元数据中store的标记
  */
-export const MD_STORE = '@@[redux]store';
+export const MD_STORE = `${REDUX_TITLE}store`;
 /**
  * store 元数据接口
  */
@@ -14,11 +15,10 @@ export interface StroeMetaData {
   model: Type<any>;
 }
 
-
 /**
  * 元数据中selec的标记
  */
-export const MD_SELECT = '@@[redux]select';
+export const MD_SELECT = `${REDUX_TITLE}select`;
 /**
  * select 元数据
  */
@@ -28,24 +28,15 @@ export interface SelectMetadata {
   key?: string;
 }
 
-
 /**
  * store aspect 标识
  */
-export const MD_ASPECT_STORE = '@@[redux]store aspect';
-/**
- * 注册redux pointcut
- * @param target 目标对象
- * @param aspect 处理aspect service
- */
-export function registerReduxPointcut(target: Type<any>, aspect: Type<any> | InjectionToken<any>) {
-  return registerPointcut(target, MD_ASPECT_STORE, aspect);
-}
+export const MD_ASPECT_STORE = `${REDUX_TITLE}store aspect`;
 
 /**
  * model类的元数据标识
  */
-export const MD_MODEL_TOKEN = '@@[redux]model';
+export const MD_MODEL_TOKEN = `${REDUX_TITLE}model`;
 /**
  * model被hack之后对应的state key type接口
  */
@@ -103,3 +94,6 @@ export interface ModelConfig {
   createAction?: (actinType: string, args: any[]) => AnyAction;
   [key: string]: any;
 }
+
+export const warning = warningFn(REDUX_TITLE);
+export const checkArgument = checkArgumentFn(REDUX_TITLE);

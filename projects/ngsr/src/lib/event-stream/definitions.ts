@@ -1,13 +1,15 @@
 import { Type } from '@angular/core';
+import { checkArgumentFn, warningFn } from '../tools';
 
+export const EVENT_TITLE = '@@[event-stream]';
 /**
  * event stream aspect 标识
  */
-export const MD_EVENT_ASPECT = '@@[event-stream]aspect';
+export const MD_EVENT_ASPECT = `${EVENT_TITLE}aspect`;
 /**
  * event stream 监听者通知标识
  */
-export const MD_EVENT_SUB_ADVICE = '@@[event-stream]subscribes';
+export const MD_EVENT_SUB_ADVICE = `${EVENT_TITLE}subscribe`;
 /**
  * 订阅者元数据
  */
@@ -24,10 +26,13 @@ export interface SubscribeMetadata {
 /**
  * event stream 发布者通知标识
  */
-export const MD_EVENT_PUB_ADVICE = '@@[event-stream]publis';
+export const MD_EVENT_PUB_ADVICE = `${EVENT_TITLE}publish`;
 /**
  * 发布者元数据
  */
 export interface PublishMetadata {
   propertyKey: string;
 }
+
+export const warning = warningFn(EVENT_TITLE);
+export const checkArgument = checkArgumentFn(EVENT_TITLE);

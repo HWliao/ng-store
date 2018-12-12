@@ -1,9 +1,10 @@
 import { Model, HackType } from '../../store/annotation/model.annotation';
+import { EVENT_TITLE } from '../definitions';
 
 /**
  * 事件队列model
  */
-@Model('@@[event-stream]')
+@Model(EVENT_TITLE)
 export class EventModel {
   /**
    * 事件描述
